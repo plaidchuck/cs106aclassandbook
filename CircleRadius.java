@@ -10,7 +10,8 @@ public class CircleRadius extends ConsoleProgram {
 		println("Area of circle: " + a);
 		
 	}
-	
+
+	/* Set PI as constant for the entire run method. */
 	private static final double PI = 3.14;
  	
 }
