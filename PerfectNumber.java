@@ -9,18 +9,14 @@ import acm.program.*;
 //extends class for console output
 public class PerfectNumber extends ConsoleProgram{
 //start main method run
-	public void run() {
-//Inputs starting value of 1 for n
-		int n = 1;
+public void run() {
 //sets for loop to check all numbers from 1 to 9999
-		for (int i = 1; i <= 9999; i++) {
+		for (int n = 1; n <= 9999; n++) {
 //sets if conditional to print that n is a perfect number if the isPerfect method
 //returns true.
 			if (isPerfect(n)) {
 			println(n + " is a perfect number.");
 			} 
-//adds 1 to n to check the next number
-			n++;
 		}
 	}
 	
