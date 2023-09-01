@@ -8,41 +8,29 @@ import acm.util.*;
 
 public class CoinFlip extends ConsoleProgram {
 	public void run() {
-//sets integer variables to count flips
+//sets integer variables to count flips and heads
 		int flips = 0;
-//sets indefinite loop until three heads appear
-		while (true) {
-//sets nested if/else statements to count each flip and if rgen returns true
-//will print as heads and if it is false as tails. If three heads in a row
-//appear then the loop ends
+		int headflips = 0;
+//sets loop until headflips count equals 3
+		while (headflips < 3) {
+//adds to flip count for each coin flip
+		flips += 1;
+//if flip is heads, outputs result adds to headflips counter and goes back to loop
 			if (rgen.nextBoolean()) {
-				flips += 1;
 				println("Heads.");
-				if (rgen.nextBoolean()) {
-					flips += 1;
-					println("Heads.");
-					if (rgen.nextBoolean()) {
-						flips += 1;
-						println("Heads.");
-						break;
-					} else {
-						flips += 1;
-						println("Tails.");
-					}
-				} else {
-					flips += 1;
-					println("Tails.");
-				}
+				headflips += 1;
 			} else {
-				flips +=1;
+//If flip is tails, outputs result and resets headflips counter 
 				println("Tails.");
+				headflips = 0;
 			}
+			
 		}
 //prints how many times it took to flip three heads
 		println("It took " + flips + " flips to get three consecutive Heads.");
 //asks for string input to run the program again or quit program
 		String answer = readLine("Do you want to try again? Enter Yes or No: ");
-		if (answer.equals("Yes")) { 
+		if (answer.equalsIgnoreCase("Yes")) { 
 			run();
 		} 
 		exit();
