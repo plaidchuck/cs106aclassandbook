@@ -1,0 +1,35 @@
+/*
+ * This program takes an integer and provides the sum
+ * of each digit within the integer.
+ */
+
+import acm.program.*;
+
+public class DigitSum3 extends ConsoleProgram {
+    public void run() {
+    	println("This program finds the digital root of an integer.");
+//positive integer is entered into n variable
+		int n = readInt("Enter a positive integer: ");
+//initializes dsum variable for total sum of integers
+		int dsum = 0;
+//initialize while loop to continue until the digital root number is reached
+		    while (true) {
+//initialize while loop to calculate sum of digits of integer n
+			    while (n > 0) {
+//n is divided by 10, and that remainder is added to sum variable
+			        dsum += n % 10;
+//n divided by 10 for the next loop
+					n /= 10;
+ 					}
+//checks and breaks if dsum value is less than 10, meaning digital root is reached
+				if (dsum < 10) {
+					break;
+				}
+//sets variables for next loop to calculate sum of digits until digital root is reached
+				n = dsum;
+	 			dsum = 0;
+ 			}
+//prints the result of the digital root
+ 		println("The digital root is " + dsum);
+	}
+}
