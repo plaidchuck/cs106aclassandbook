@@ -1,0 +1,46 @@
+/*A program that performs the quadratic equation and gives two solutions or no
+ * solution if the quantity under the square root portion is negative.
+ */
+
+import acm.program.*;
+
+public class Quadratic extends ConsoleProgram {
+
+	public void run() {
+//state program purpose
+	println("Enter coefficients for the quadratic equation:");
+//obtain input of a, b, and c variables of equation
+	double a = readDouble("a: ");
+	double b = readDouble("b: ");
+	double c = readDouble("c: ");
+//check for negative determinant and provide two solutions if possible
+	checkEquationForNegativeDiscriminant(a, b, c);
+		
+	}
+	
+	/* Method to determine if quantity under square root in equation
+	 * is negative.
+	 */
+	private void checkEquationForNegativeDiscriminant(double a, double b, double c) {
+//check if determinant under the square root is negative, if so output no solution
+		double determinant = (b * b) - (4 * a * c);
+		if (determinant < 0) {
+			println("Based on the values entered, there are no real solutions.");
+		} else {
+//proceed to calculate and output solutions
+			performEquation(a, b, determinant);
+		}
+	}
+	
+	/* Method to perform equation once two real solutions
+	 * are confirmed.
+	 */
+	private void performEquation(double a, double b, double determinant) {
+//complete each variation of the quadratic formula
+		double firstSolution = (-b + Math.sqrt(determinant)) / (2 * a);
+		double secondSolution = (-b - Math.sqrt(determinant)) / (2 * a);
+//output the two solution
+		println("The first solution is " + firstSolution);
+		println("The second solution is " + secondSolution);
+	}
+}
