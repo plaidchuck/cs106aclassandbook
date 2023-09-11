@@ -18,6 +18,8 @@ public class CheckerBoard extends GraphicsProgram {
 	private static final int NROWS = 8;
  /* Number of columns */
 	private static final int NCOLUMNS = 8;
+/* size of checkers */
+	private static final int CHECKERS_SIZE = 40;
 
  /* Runs the program */
 	public void run() {
@@ -40,14 +42,14 @@ public class CheckerBoard extends GraphicsProgram {
 				add(sq);
 //if on the first through third row, fill in even square with red checkers
 				if ((i < 3) && ((i + j) % 2) != 0){
-					GOval redChecker = new GOval (x, y, sqSize, sqSize);
+					GOval redChecker = new GOval (x + (sqSize - CHECKERS_SIZE) / 2, y + (sqSize - CHECKERS_SIZE) / 2, CHECKERS_SIZE, CHECKERS_SIZE);
 					redChecker.setFilled(true);
 					redChecker.setFillColor(Color.RED);
 					add(redChecker);
 				}
 //if on the sixth through eigth row, fill in even square with black checkers
 				if ((i > 4) & ((i + j) % 2) != 0) {
-					GOval blackChecker = new GOval (x, y, sqSize, sqSize);
+					GOval blackChecker = new GOval (x + (sqSize - CHECKERS_SIZE) / 2, y + (sqSize - CHECKERS_SIZE) / 2, CHECKERS_SIZE, CHECKERS_SIZE);
 					blackChecker.setFilled(true);
 					blackChecker.setFillColor(Color.BLACK);
 					add(blackChecker);
