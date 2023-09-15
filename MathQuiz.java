@@ -9,7 +9,7 @@ import acm.util.*;
 public class MathQuiz extends ConsoleProgram {
 
 //sets constant for how many questions are asked, 
-// how many retries are allowed and the number limits for problem answers	
+// how many retries are allowed and the range for correct answers	
 //to ensure no addition problem answer is above 20 and no subtraction one is below 0
 private static final int NUM_PROBLEMS = 5;
 private static final int MAX_SUM = 20;
@@ -19,81 +19,52 @@ private static final int TRIES = 3;
 public void run() {
 //states program purpose
 	println("Welcome to Math Quiz");
-//generates random boolean to decide between addition and subtraction problem
-//and asks the number of problems set by constant
+	println("You have three tries per question.");
+//Sets for loop to ask specified number of questions
+//Determines operation and generates question
 	for (int i = 0; i < NUM_PROBLEMS; i++) {
-		if (rgen.nextBoolean()) {
-			askAdditionQuestion();
-			} else {
-				askSubtractionQuestion();
-				}
+		askQuestion(checkOperation());
 	}
 }
 
-//private instance variables
-/*Generates an addition problem of two numbers in the range specified by the constants
- * and displays them. Then it asks the user to answer the question and provides feedback.
- */
-private void askAdditionQuestion() {
-	int firstNumber = rgen.nextInt(MIN_SUM, MAX_SUM);
-	int secondNumber = rgen.nextInt(MIN_SUM, MAX_SUM);
-	int correctAnswer = (firstNumber + secondNumber);
-	if (correctAnswer > MAX_SUM) {
-		askAdditionQuestion();
-		} else {
-			int tryCounter = TRIES;
-			//asks for user input to answer the problem and confirms answer or says it is wrong
-			while (tryCounter > 0) {
-				int userAnswer = readInt("What is " + firstNumber + " + " + secondNumber + "? ");
-					if (userAnswer == correctAnswer) {
-						println(congratsRandomizer());
-						break;
-						} else { 
-//s counter that keeps track of how many retries are left for the answer
-							tryCounter--;
-							if (tryCounter == 0) {
-								println("That's incorrect - the answer is: " + correctAnswer);
-							} else {
-								println("That's incorrect - try a different answer. ");
-							}
-						}
-				}
-			}
+//determines operation for question and returns result to generate questions
+private String checkOperation() {
+	String operation;
+	if (rgen.nextBoolean()) {
+		operation = "+";
+	} else {
+		operation = "-";
 	}
+	return operation;
+}
 
-
-
-/* Generates a subtraction problem of two numbers in the range specified by the constants
- * and displays them. Then it asks the user to answer the question and provides feedback.
- */
-private void askSubtractionQuestion() {
+//Receives type of operation for question and generates question and checks the
+//answer
+private void askQuestion(String operation) {
+//sets variables for numbers in question depending on the operation type
 	int firstNumber = rgen.nextInt(MIN_SUM, MAX_SUM);
-	int secondNumber = rgen.nextInt(MIN_SUM, MAX_SUM);
-	int correctAnswer = firstNumber - secondNumber;
-	if (correctAnswer < MIN_SUM) {
-		askSubtractionQuestion();
-		} else {
-//asks for user input to answer the problem and confirms answer or says it is wrong
-			int tryCounter = TRIES;
-			while (tryCounter > 0) {
-			int userAnswer = readInt("What is " + firstNumber + " - " + secondNumber + "? ");
-				if (userAnswer == correctAnswer) {
-					println(congratsRandomizer());
-					break;
-					} else {
-						tryCounter--;
-						if (tryCounter == 0) {
-							println("That's incorrect - the answer is: " + correctAnswer);
-						} else {
-							println("That's incorrect - try a different answer. ");
-						}
-					}
+	int secondNumber = operation.equals("+") ? 	rgen.nextInt(MIN_SUM, MAX_SUM - firstNumber) : rgen.nextInt(MIN_SUM, firstNumber);
+	int correctAnswer = operation.equals("+") ? firstNumber + secondNumber : firstNumber - secondNumber;
+//sets counter for tries after a wrong answer and sets indefinite loop until
+//the counter is reached
+	int tryCounter = TRIES;
+	while (tryCounter > 0) {
+	int userAnswer = readInt("What is " + firstNumber + (operation.equals("+") ? " + " : " - "  ) + secondNumber + "? ");
+		if (userAnswer == correctAnswer) {
+			println(congratsRandomizer());
+			break;
+			} else {
+				tryCounter--;
+				if (tryCounter == 0) {
+					println("That's incorrect - the answer is: " + correctAnswer);
+				} else {
+					println("That's incorrect - try a different answer. ");
+				}
 			}
 		}
-}
+	}
 
-//a switch method that displays one of four different congratulatory responses for
-//answering a question correctly
+//generates a random kudos response upon input of correct answer
 private String congratsRandomizer() {
 	int kudos = rgen.nextInt(4);
 	switch (kudos) {
@@ -104,7 +75,6 @@ private String congratsRandomizer() {
 	default: return "Correct!"; 
 	}
 }
-
 
 //initiates random number object
 private RandomGenerator rgen = RandomGenerator.getInstance();
