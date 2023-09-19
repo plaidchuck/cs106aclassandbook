@@ -1,0 +1,43 @@
+/*
+ * A program to draw at any time 10 random sized, random colored,
+ * randomly located circles on the screen. No circle will extend beyond
+ * the edge of the screen.
+ * 
+ */
+
+import acm.graphics.*;
+import acm.program.*;
+import acm.util.*;
+
+public class RandomCircles extends GraphicsProgram {
+
+/*
+ * Constants for the number of circles and the max and min size of them
+ */
+private static final int NUM_CIRCLES = 10;
+private static final double MIN_RADIUS = 5;
+private static final double MAX_RADIUS = 50;
+
+	public void run() {
+		drawRandomCircle();
+	}
+
+/*
+ * For each circle, generates random variables for the size, location,
+ *  and color. It then generates the circle and adds it to canvas.
+ */
+	private void drawRandomCircle() {
+		for (int i = 0; i < NUM_CIRCLES; i++) {
+			double r = rgen.nextDouble(MIN_RADIUS, MAX_RADIUS);
+			double x = rgen.nextDouble(0, getWidth() - 2 * r);
+			double y = rgen.nextDouble(0, getHeight() - 2 * r);
+			GOval circle = new GOval(x, y, 2 * r, 2 * r);
+			circle.setFilled(true);
+			circle.setColor(rgen.nextColor());
+			add(circle);
+		}
+	}
+
+//Random instance variable to use random number and color generator
+private RandomGenerator rgen = RandomGenerator.getInstance();
+}
