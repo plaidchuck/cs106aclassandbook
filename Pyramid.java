@@ -11,8 +11,11 @@
  */
 
 //imports graphics library
+import java.awt.Color;
+
 import acm.graphics.*;
 import acm.program.*;
+import acm.util.*;
 
 
 //extends graphical output
@@ -29,12 +32,13 @@ public class Pyramid extends GraphicsProgram {
 	private static final int BRICKS_IN_BASE = 14;
 	
 public void run() {
+	System.out.println(getHeight());
 //used to decrement the amount of bricks per row
 	int bricksLeft = BRICKS_IN_BASE;
 //used to set starting x coordinate for left most brick in row so base is centered on screen
-	int startingX = getWidth() / 2 - (BRICK_WIDTH * bricksLeft) / 2;
-//used to set starting y coordinate for brick based on its height
-	int startingY = getHeight() - BRICK_HEIGHT;
+	double startingX = getWidth() / 2 - (BRICK_WIDTH * BRICKS_IN_BASE) / 2;
+//used to set starting y coordinate for centering brick based on its height
+	double startingY = (getHeight() + (BRICK_HEIGHT * BRICKS_IN_BASE)) / 2;
 //draw new row up to the decrementing amount of bricks
 	for (int row = 0; row < BRICKS_IN_BASE; row++) {
 //draw bricks up to the number of bricks in the base which is 14
@@ -43,6 +47,9 @@ public void run() {
 			GRect brick = new GRect(startingX + (BRICK_WIDTH * col), startingY - (row * BRICK_HEIGHT), BRICK_WIDTH, BRICK_HEIGHT);
 //System.out.println(startingX - (BRICK_WIDTH * col));
 			//draws brick to screen
+			brick.setFilled(true);
+			brick.setFillColor(rgen.nextColor());
+			brick.setColor(Color.BLACK);
 			add(brick);
 			}
 //after each row, decrement amount of bricks for next row
@@ -51,8 +58,6 @@ public void run() {
 		startingX = getWidth() / 2 - (BRICK_WIDTH * bricksLeft) / 2;
 		}
 	}		
+
+private RandomGenerator rgen = RandomGenerator.getInstance();
 }
-
-	
-
-
