@@ -1,4 +1,4 @@
-/*
+/* 
  * A file to animate PacMan as a GArc munching across the screen.
  */
 
@@ -20,40 +20,22 @@ private static final double START_X = 0;
 
 
 	public void run() {
-		
-//Canvas color for more contrast with yellow Pacman
-		setBackground(Color.BLACK);
-		
+		setupCanvas();
 		drawPacman();
+		animatePacman();
+}
 
-//Moves Pacman far until the object is past the right edge of canvas
-			while (pacman.getX() < getWidth()) {
-				
-/* 
- * Sets two conditional loops based on if the "mouth" is open or closed.
- * In either scenario the start and sweep variables are adjusted to
- * open and close the mouth respectively and Pacman is moved
- * across the screen.
+/*
+ * Sets color of background canvas.
  */
-				if (start < 0) {
-					start += 15;
-					sweep -= 30;
-					movePacman();
-				}
-				
-				if (start == 0) {
-					while (start > -45) {
-					start -= 15;
-					sweep += 30;
-					movePacman();
-					}
-				}
-			} 
+	private void setupCanvas() {
+		setBackground(Color.BLACK);
 	}
 
 /*
- * Centers Pacman on the screen vertically and places him horizontally
- * and sets the appropriate size based on constants.
+ * Sets variable to center Pacman and adds him to the screen. Pause is used with
+ * the delay constant to make sure Pacman starts in the initial open mouth
+ * position.
  */
 	private void drawPacman() {
 		double startY = (getHeight() - PAC_DIAM) / 2;
@@ -65,20 +47,49 @@ private static final double START_X = 0;
 	}
 
 /*
- * Moves Pacman the number of pixels set by constant. Also sets current start
- * and sweep angle of mouth and then pauses for the time specified by
- * constant.
+ * Moves Pacman across the screen with the open and close mouth animations
+ * until his entire object moves past the right edge of the canvas.
+ */
+	private void animatePacman() {
+		while (pacman.getX() < getWidth()) {
+			moveMouth();
+		}
+	}
+
+/*
+ * Runs open or close mouth loop to adjust the values of the start and sweep
+ * variables for the Pacman GArc object and then calls method to move Pacman
+ * while performing mouth animation.
+ */
+	private void moveMouth() {
+		while (start < 0) {
+			start += 15;
+			sweep -= 30;
+			movePacman();
+		}
+		
+		while (start > -45) {
+			start -= 15;
+			sweep += 30;
+			movePacman();
+    }
+
+}
+
+/*
+ * Moves Pacman object using movement speed constant and changes the
+ * start and sweep values before a pause using the animation delay constant.
  */
 	private void movePacman() {
 		pacman.move(SPEED, 0);
 		pacman.setStartAngle(start);
 		pacman.setSweepAngle(sweep);
 		pause(DELAY);
-		
-	}
+}
+
 	
 // instance variables
-	private GArc pacman;
-	private int start = -45;		//GArc start angle for Pacman's mouth
-	private int sweep = -270;	//GArc sweep angle for Pacman's mouth
+private GArc pacman;
+private int start = -45;		//GArc start angle for Pacman's mouth
+private int sweep = -270;		//GArc sweep angle for Pacman's mouth
 }
