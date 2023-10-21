@@ -74,16 +74,30 @@ public class Breakout extends GraphicsProgram {
  * Begin game loop after setup
  */
 	private void startGame() {
-		makeBall();
-		waitForClick();
-		while (true) {
+		turns = new GLabel("Turns Left: " + turnsLeft);
+		turns.setFont("Comic Sans MS-bold-18");
+		turns.setLocation(getWidth() - turns.getWidth(), turns.getAscent());
+		turns.sendBackward();
+		add(turns);
+		
+		
+		if (turnsLeft > 0) {
+			makeBall();
+			waitForClick();
+		}
+		
+		while (turnsLeft > 0 && brickCounter < NBRICK_ROWS * NBRICKS_PER_ROW) {
+			println(brickCounter);
 			animateBall();
 			checkCollision();
 			if (ball.getY() > getHeight() - BALL_RADIUS * 2) {
 				remove(ball);
+				turnsLeft--;
+				remove(turns);
 				startGame();
 			}
 		}
+		removeAll();
 	}
 	
 /*
@@ -133,15 +147,14 @@ public class Breakout extends GraphicsProgram {
 		GObject collider = getCollidingObject();
 		if (collider == paddle) {
 	//		bounceClip.play();
-			if (ball.getY() >= getHeight() - PADDLE_Y_OFFSET - PADDLE_HEIGHT - BALL_RADIUS*2 && ball.getY() < getHeight() - PADDLE_Y_OFFSET - PADDLE_HEIGHT - BALL_RADIUS*2 + 3) {
-				vy = -vy;
-				//-Math.abs(vy);
+				vy = -Math.abs(vy);
 				ball.move(vx, vy);
 				pause(DELAY);
-			}
+			
 		}
-			else if (collider != null) {
+			else if (collider != null & collider != turns) {
 			remove(collider);
+			brickCounter++;
 //			bounceClip.play();
 			vy = -vy;
 			ball.move(vx, vy);
@@ -183,6 +196,7 @@ public class Breakout extends GraphicsProgram {
 	private void setup() {	
 	//	bounceClip = MediaTools.loadAudioClip("bounce.au"); 
 		turnsLeft = NTURNS;
+		brickCounter = 0;
 		makeBrickRow();
 		makePaddle();
 	}
@@ -269,7 +283,10 @@ public class Breakout extends GraphicsProgram {
 	private double vx; //x direction speed of ball
 	private double vy; //y direction speed of ball
 	
-	private int turnsLeft;
+	private int turnsLeft; // turns before end game state
+	private int brickCounter; // tracks number of bricks removed to add to score
+	private GLabel turns; // displays how many turns are left
+	private GLabel score; //displays how many bricks removed
 	
 	/*
 	 * Use to randomize ball velocity
