@@ -1,5 +1,5 @@
 /*
- * A collection of methods used in the chapter 8 String excercises.
+ * A collection of methods used in the chapter 8 String exercises.
  */
 
 import acm.program.*;
@@ -11,14 +11,43 @@ public class StringExerciseMethods extends ConsoleProgram {
 private static final int MIN_LETTERS = 1;
 private static final int MAX_LETTERS = 10;
 	
+/*
+ * Constant to remove/delimit special characters from token strings
+ */
+private static final String DELIMITERS = "!@#$%^&*()[]\\;',./-=_+{}|:<>?`~ ;\" +";
+	
 	public void run() {
-	String bs = "BOOLEAN";
-	println(capitalize(bs));
-	println(createDateString(9, 1, 1986));
-	println(createDateString(22, 12, 1995));
-	println(createDateString(1, 10, 1823));
 
+		String word = readLine("Enter a word to pluralize: ");
+		println(createRegularPlural(word));
 	}
+	
+	/*
+	 * A method to take a word and pluralize
+	 * it according to standard English rules involving words ending in
+	 * vowels, s, z, x, ch, sh, and y.
+	 */
+	
+	private String createRegularPlural(String str) {
+		    // Input validation
+		    if (str == null || str.isEmpty()) {
+		        throw new IllegalArgumentException("Input string cannot be null or empty.");
+		    }
+
+		    char lastLetter = str.charAt(str.length() - 1);
+		    char penultimateLetter = (str.length() > 1) ? str.charAt(str.length() - 2) : '\0';
+
+		    if (lastLetter == 's' || lastLetter == 'x' || lastLetter == 'z') {
+		        return str + "es";
+		    } else if (lastLetter == 'y' && isEnglishConsonant(penultimateLetter)) {
+		        return str.substring(0, str.length() - 1) + "ies";
+		    } else if ((str.endsWith("ch") || str.endsWith("sh"))) {
+		        return str + "es";
+		    } else {
+		        return str + "s";
+		    }
+		}
+	
 	
 	/*
 	 * Takes in three date integers and returns a string in the
@@ -100,6 +129,7 @@ private static final int MAX_LETTERS = 10;
 			return true;
 		}
 	}
-	
+
+//RandomGenerator instance
 private RandomGenerator rgen = RandomGenerator.getInstance();
 }
