@@ -1,4 +1,8 @@
-
+/**
+ * A class to mimic the implementation of the java StringTokenizer class.
+ * @author Johnny
+ *
+ */
 
 public class StringBlockinator {
 
@@ -16,9 +20,10 @@ public class StringBlockinator {
 
     public String nextBlock() {
    
-    	inputLine = inputLine.trim();
+    	
     	boolean inDelimiterRun = false;
     	int endIndex = 0;
+    	
     	
     	for (int i = startIndex; i < inputLine.length(); i++) {
     		char inputChar = inputLine.charAt(i);
@@ -29,11 +34,17 @@ public class StringBlockinator {
     			
     			if (startIndex < endIndex) {
     				block = inputLine.substring(startIndex, endIndex);
+    				
+    				 while (endIndex < inputLine.length() && Character.isWhitespace(inputLine.charAt(endIndex))) {
+    				        endIndex++;
+    				    }
+
     				startIndex = endIndex;
     				return block;
     			}
     			
     		}
+    		
     		
     		if (!Character.isWhitespace(inputChar) && inDelimiterRun) {
     			
@@ -43,7 +54,7 @@ public class StringBlockinator {
     		}
     		
     	}
-  
+    
     	
     	if (startIndex < inputLine.length()) {
     		block = inputLine.substring(startIndex);
@@ -56,9 +67,11 @@ public class StringBlockinator {
      
     
     public boolean hasMoreBlocks() {
-        return startIndex < inputLine.length();
+    
+    	return startIndex < inputLine.length();
+    
     }
-
+    
     private boolean isDelimiter(char ch) {
         return delims != null && delims.indexOf(ch) != -1;
     }
