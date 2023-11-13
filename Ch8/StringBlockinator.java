@@ -7,20 +7,26 @@
 public class StringBlockinator {
 
     public StringBlockinator(String inputLine) {
-        this.inputLine = inputLine;
-        startIndex = 0;
-        delims = null; //set so that the only delimiter is white space
+        this(inputLine, null);
+        this.startIndex = 0;
+      
     }
 
     public StringBlockinator(String inputLine, String delims) {
         this.inputLine = inputLine;
         this.delims = delims;
-        startIndex = 0;
+        this.startIndex = 0;
+        includeDelims = false;
+    }
+    
+    public StringBlockinator(String inputLine, String delims, boolean includeDelims) {
+    	this(inputLine, delims);
+    	this.includeDelims = includeDelims;
+    	this.startIndex = 0;
     }
 
     public String nextBlock() {
-   
-    	
+   	
     	boolean inDelimiterRun = false;
     	int endIndex = 0;
     	
@@ -28,7 +34,29 @@ public class StringBlockinator {
     	for (int i = startIndex; i < inputLine.length(); i++) {
     		char inputChar = inputLine.charAt(i);
     		
-    		if (Character.isWhitespace(inputChar) && !inDelimiterRun) {
+    		
+    		if (delims != null && isDelimiter(inputChar) && !inDelimiterRun) {
+    
+    			endIndex = i;
+    			inDelimiterRun = true;
+    			
+    			
+    			
+    			if (startIndex < endIndex) {
+    				block = inputLine.substring(startIndex, endIndex);
+    				
+    				 while (endIndex < inputLine.length() && isDelimiter(inputLine.charAt(endIndex))) {
+    				        endIndex++;
+    				    }
+
+    				startIndex = endIndex;
+    				return block;
+    			}
+    		}
+    		
+    		
+    		else if (delims == null && Character.isWhitespace(inputChar) && !inDelimiterRun) {
+    			
     			endIndex = i;
     			inDelimiterRun = true;
     			
@@ -43,15 +71,27 @@ public class StringBlockinator {
     				return block;
     			}
     			
+    			
+    			
     		}
     		
     		
-    		if (!Character.isWhitespace(inputChar) && inDelimiterRun) {
+    		
+    		if (delims != null && !isDelimiter(inputChar) && inDelimiterRun) {
+    			
+    			inDelimiterRun = false;
+    			startIndex = i;
+    			
+    		}
+    		
+    		if (delims == null && !Character.isWhitespace(inputChar) && inDelimiterRun) {
     			
     			inDelimiterRun = false;
     			startIndex = i;
   
     		}
+    		
+    		
     		
     	}
     
@@ -66,6 +106,7 @@ public class StringBlockinator {
      }
      
     
+    
     public boolean hasMoreBlocks() {
     
     	return startIndex < inputLine.length();
@@ -79,8 +120,9 @@ public class StringBlockinator {
 
 	
 	
-	private String inputLine; //holds original input string
+	private String inputLine; 
 	private String delims; //holds specified delimiters for blocks
 	private String block; //holds current block from original String
-	private int startIndex; //holds start index position during string loops
+	private int startIndex; //holds start index position during String loops
+	boolean includeDelims; //flag for delimiters to be returned as blocks
 }
