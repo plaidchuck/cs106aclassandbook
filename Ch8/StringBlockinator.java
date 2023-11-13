@@ -45,7 +45,11 @@ public class StringBlockinator {
     			if (startIndex < endIndex) {
     				block = inputLine.substring(startIndex, endIndex);
     				
-    				 while (endIndex < inputLine.length() && isDelimiter(inputLine.charAt(endIndex))) {
+    				 if (includeDelims) {
+    					 
+    				 }
+    				 
+    				 else while (endIndex < inputLine.length() && isDelimiter(inputLine.charAt(endIndex))) {
     				        endIndex++;
     				    }
 
@@ -70,11 +74,8 @@ public class StringBlockinator {
     				startIndex = endIndex;
     				return block;
     			}
-    			
-    			
-    			
-    		}
     		
+    		}
     		
     		
     		if (delims != null && !isDelimiter(inputChar) && inDelimiterRun) {
@@ -91,7 +92,11 @@ public class StringBlockinator {
   
     		}
     		
-    		
+    		if (includeDelims && isDelimiter(inputChar)) {
+    			block = "" + inputChar;
+    			startIndex++;
+    			return block;
+    		}
     		
     	}
     
