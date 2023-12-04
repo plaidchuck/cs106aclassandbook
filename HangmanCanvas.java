@@ -8,7 +8,7 @@ import acm.graphics.*;
 
 public class HangmanCanvas extends GCanvas {
 
-/** Resets the display so that only the scaffold appears */
+/** Resets the display and initializes instance variables, then scaffold appears */
 	public void reset() {
 		removeAll();
 		incorrectLetter = "";
@@ -52,6 +52,9 @@ public class HangmanCanvas extends GCanvas {
 		if (tries == 8) tries = 0; //reset for new game
 	}
 	
+/**
+ * Based on the number of the incorrect guess, draws appropriate part of hangman image.
+ */
 	private void drawHangman() {
 		double centerX = getWidth() / 2;
 		double centerY = getHeight() / 3;
@@ -94,6 +97,9 @@ public class HangmanCanvas extends GCanvas {
 		}
 	}
 	
+	/**
+	 * Draws scaffold upon reset or initialize of game
+	 */
 	private void drawScaffold() {
 		double centerX = getWidth() / 2;
 		double centerY = getHeight() / 3;
@@ -119,9 +125,9 @@ public class HangmanCanvas extends GCanvas {
 	private static final int FOOT_LENGTH = 28;
 	private static final int DISPLAY_WORD_OFFSET = 60;
 	
-	private int tries; //count number of  incorrect guesses for hangman picture
+	private int tries; //count incorrect guess to display correct part of hangman
 	
 	private GLabel gameWord; //displays correctly guessed letters if any
-	private GLabel incorrectString; //label display of incorrect guesses
+	private GLabel incorrectString; //object to display incorrect guesses
 	private String incorrectLetter; //string sent to GLabel for display
 }
