@@ -4,15 +4,22 @@
  * A simple hangman game with dual console and graphic representation.
  */
 
-import acm.graphics.*;
 import acm.program.*;
 import acm.util.*;
-import java.awt.*;
+
+
+
 
 public class Hangman extends ConsoleProgram {
 	
 private static final int MAX_TRIES = 8; //Number of incorrect guesses allowed
 
+	/*
+	 * Initializes graphic canvas for Hangman image and makes a "split" screen with the ConsoleProgram
+	 * in the main Hangman class.
+	 * (non-Javadoc)
+	 * @see acm.program.ConsoleProgram#init()
+	 */
 	public void init() {
 		canvas = new HangmanCanvas();
 		add(canvas);
@@ -28,11 +35,14 @@ private static final int MAX_TRIES = 8; //Number of incorrect guesses allowed
 	 */
     public void run() {
     	lexicon = new HangmanLexicon();
-    	gameSetup();
-		while (gameWord.indexOf("-") != -1 && triesLeft > 0) {
-			playGame();
-		}
-		endgame();
+    	while (true) {
+    		gameSetup();
+    		while (gameWord.indexOf("-") != -1 && triesLeft > 0) {
+    			playGame();
+    		}
+    		endgame();
+    		if (!playAgain()) break;
+    	}
 	}
     
     /*
@@ -67,10 +77,11 @@ private static final int MAX_TRIES = 8; //Number of incorrect guesses allowed
     private void gameSetup() {
     	canvas.reset();
     	triesLeft = MAX_TRIES;
-		secretWord = lexicon.getWord(rgen.nextInt(0, lexicon.getWordCount() - 1));
-		println("Guess the word: " + gameWord());
+		secretWord = lexicon.getWord(rgen.nextInt(0, lexicon.getWordCount()));
+    	println("Guess the word: " + gameWord());
 		canvas.displayWord(gameWord);
     }
+    
     
     /*
      * Generate the game word which represents the current
@@ -128,6 +139,16 @@ private static final int MAX_TRIES = 8; //Number of incorrect guesses allowed
 			println("You guessed the word: " + secretWord);
 			println("You win!");
 		}
+    }
+    
+    /*
+     * Takes input to determine if the players wants to start another game
+     */
+    
+    private boolean playAgain() {
+    	String replay = readLine("Play again? ");
+    	if (replay.startsWith("y") || replay.startsWith("Y")) return true;
+    	else return false;
     }
     
     private String secretWord; // Word to be guessed
