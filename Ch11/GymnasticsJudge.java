@@ -5,36 +5,39 @@ public class GymnasticsJudge extends ConsoleProgram {
 private static final int N_JUDGES = 7;
 private static final int N_THROWN_OUT = 2;
 	
-public void run() {
-    double[] scores = new double[N_JUDGES];
-    for (int i = 0; i < scores.length; i++) {
-        scores[i] = readDouble("Score for judge " + (i + 1) + ": ");
-    }
+	public void run() {
+		double[] scores = new double[N_JUDGES];
+		for (int i = 0; i < scores.length; i++) {
+			scores[i] = readDouble("Score for judge " + (i + 1) + ": ");
+		}
+		  
+		int smallestIndex = 0;
+		int largestIndex = 0;
 
-    // Initialize smallestNumber and largestNumber with the first score
-    double smallestNumber = scores[0];
-    double largestNumber = scores[0];
 
-    // Iterate through the array starting from index 1
-    for (int i = 1; i < scores.length; i++) {
-        if (scores[i] > largestNumber) {
-            largestNumber = scores[i];
-        } else if (scores[i] < smallestNumber) {
-            smallestNumber = scores[i];
-        }
-    }
+		for (int i = 0; i < scores.length; i++) {
+			if (scores[i] > scores[largestIndex]) {
+				largestIndex = i;
+			} else if (scores[i] < scores[smallestIndex]) {
+				smallestIndex = i;
+			}
+		}
+    
+		scores[smallestIndex] = 0;
+		scores[largestIndex] = 0;
+		
+		for (int i = 0; i < scores.length; i++) {
+			System.out.println(scores[i]);
+		}
+		
+		println("Average is: " + mean(scores));
+	}
 
-    // Calculate the total excluding the smallest and largest scores
-    double total = 0;
-    for (int i = 0; i < scores.length; i++) {
-    	total += scores[i];
-    	}
-    total -= smallestNumber + largestNumber;
-
-    // Calculate the average of the adjusted scores
-    double averageScore = total / (scores.length - N_THROWN_OUT);
-
-    println("Total excluding smallest and largest scores: " + total);
-    println("The average score is " + averageScore);
+	private double mean(double[] array) {
+		double total = 0;
+		for (int i = 0; i < array.length; i++) {
+			total += array[i];
+		}
+		return total / (array.length - N_THROWN_OUT);
 	}
 }
