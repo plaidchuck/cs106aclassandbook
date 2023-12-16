@@ -7,30 +7,56 @@ private static final double SIDE_MARGIN = 10;
 private static final double C_RADIUS = 2;
 
 	public void run() {
-		double[] values = { 0, 10, 50, 80, 85, 100, 150, 120, 170, 120, 200 }; 
+		double[] values = { 0, 10, 20, 10, 25, 30, 35, 40, 50, 55, 60, 75, 80, 90 }; 
 		drawLineGraph(values);
 	}
 
 	private void drawLineGraph(double[] values) {
-		double canvasMinusMargins = (getWidth() - 2 * SIDE_MARGIN) / (values.length - 1);
-		double bottomMargin = getHeight() - SIDE_MARGIN;
-		//double yScale = calculate
+		double xScale = (getWidth() - 2 * SIDE_MARGIN) / (values.length - 1);
+		double yScale = calculateYScaling(values);
 		double xPos2;
 		double yPos2;
 		for (int i = 0; i < values.length; i++) {
-			double xPos = SIDE_MARGIN + canvasMinusMargins * i;
-			double yPos = bottomMargin - values[i];
+			double xPos = SIDE_MARGIN + xScale * i;
+			double yPos = getHeight() - SIDE_MARGIN - yScale * values[i];
 			if ( i == values.length - 1) {
-				xPos2 = xPos;
-				yPos2 = yPos;
+			xPos2 = xPos;
+			yPos2 = yPos;
 			} else {
-				xPos2 = SIDE_MARGIN + canvasMinusMargins * (i + 1);
-				yPos2 = bottomMargin - values[i + 1];
+			xPos2 = SIDE_MARGIN + xScale * (i + 1);
+			yPos2 = getHeight() - SIDE_MARGIN  - yScale * values[i + 1];
 			}
 
 			add(dataPoints(xPos, yPos));
 			add(drawLines(xPos, xPos2, yPos, yPos2));
 		}
+	}
+	
+	private double calculateYScaling(double[] values) {
+		double maxValue = findMax(values);
+		double minValue = findMin(values);
+		double yScale = (getHeight() - 2 * SIDE_MARGIN) / (maxValue - minValue);
+		return yScale;
+	}
+	
+	private double findMax(double[] values) {
+		double max = -1; // to ensure at least one value  is the maximum
+		for (double value : values) {
+			if (value > max) {
+				max = value;
+			}
+		}
+		return max;
+	}
+	
+	private double findMin(double[] values) {
+		double min = 100000000; // makes sure one value is the minimum
+		for (double value : values) {
+			if (value < min) {
+				min = value;
+			}
+		}
+		return min;
 	}
 	
 	private GOval dataPoints(double xPos, double yPos) {
