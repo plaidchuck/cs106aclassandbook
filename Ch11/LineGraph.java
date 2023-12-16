@@ -7,7 +7,7 @@ private static final double SIDE_MARGIN = 10;
 private static final double C_RADIUS = 2;
 
 	public void run() {
-		double[] values = { 0, 10, 20, 10, 25, 30, 35, 40, 50, 55, 60, 75, 80, 90 }; 
+		double[] values = {  12,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25 }; 
 		drawLineGraph(values);
 	}
 
@@ -18,13 +18,15 @@ private static final double C_RADIUS = 2;
 		double yPos2;
 		for (int i = 0; i < values.length; i++) {
 			double xPos = SIDE_MARGIN + xScale * i;
-			double yPos = getHeight() - SIDE_MARGIN - yScale * values[i];
+			//double yPos = getHeight() - C_RADIUS - SIDE_MARGIN - yScale * values[i];
+			double yPos = SIDE_MARGIN + yScale * (findMax(values) - values[i]);
 			if ( i == values.length - 1) {
 			xPos2 = xPos;
 			yPos2 = yPos;
 			} else {
 			xPos2 = SIDE_MARGIN + xScale * (i + 1);
-			yPos2 = getHeight() - SIDE_MARGIN  - yScale * values[i + 1];
+			//yPos2 = getHeight() - C_RADIUS - SIDE_MARGIN  - yScale * values[i + 1];
+			yPos2 = SIDE_MARGIN + yScale * (findMax(values) - values[i + 1]);
 			}
 
 			add(dataPoints(xPos, yPos));
