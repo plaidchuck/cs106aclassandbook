@@ -1,0 +1,60 @@
+import acm.program.*;
+import java.io.*;
+
+import acm.util.*;
+
+public class ArrayTest extends ConsoleProgram {
+
+private static final int INITIAL_CAPACITY = 10;
+	
+	public void run() {
+		BufferedReader rd = openFileReader();
+		String[] result = readLineArray(rd);
+		println(result.length);
+	
+	}
+	
+private String[] readLineArray(BufferedReader rd) {
+		String[] lineArray = new String[INITIAL_CAPACITY];
+		int nLines = 0;
+		try {
+			while (true) {
+				String line = rd.readLine();
+				if (line == null) break;
+				if (nLines + 1 >= lineArray.length) {
+					lineArray = doubleArrayCapacity(lineArray);
+				}
+				lineArray[nLines++] = line;
+			}
+			rd.close();
+		} catch (IOException ex) {
+			throw new ErrorException(ex);
+		}
+		String[] result= new String[nLines];
+		for (int i = 0; i < nLines; i++) {
+			result[i] = lineArray[i];
+		}
+		return result;
+	}
+
+private String[] doubleArrayCapacity(String[] oldArray) {
+	String[] newArray = new String[2 * oldArray.length];
+	for (int i = 0; i < oldArray.length; i++) {
+			newArray[i] = oldArray[i];
+		}
+		return newArray;
+	}
+
+private BufferedReader openFileReader() {
+	BufferedReader rd = null;
+	while (rd == null) {
+		try {
+			String prompt = readLine("Enter filename: ");
+			rd = new BufferedReader(new FileReader(prompt));
+		} catch (IOException ex) {
+			println("Can't open that file.");
+		}
+	}
+	return rd;
+	}
+}
