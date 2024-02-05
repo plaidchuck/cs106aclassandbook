@@ -4,6 +4,7 @@ public class DeleteSimpleStringMap {
 /* Creates new SimpleStringMap with no key/value pairs */
 	public DeleteSimpleStringMap() {
 		bucketArray = new HashEntry[N_BUCKETS];
+		itemCount = 0;
 	}
 	
 /**
@@ -12,12 +13,16 @@ public class DeleteSimpleStringMap {
  * @param value The new value to be associated with key
  */
 	public void put(String key, String value) {
+		if ((float) itemCount / N_BUCKETS >= 0.5) {
+			bucketArray = expandBuckets(bucketArray);
+		}
 		int bucket = Math.abs(key.hashCode()) % N_BUCKETS;
 		HashEntry entry = findEntry(bucketArray[bucket], key);
 		if (entry == null) {
 			entry = new HashEntry(key, value);
 			entry.setLink(bucketArray[bucket]);
 			bucketArray[bucket] = entry;
+			itemCount++;
 		} else {
 			entry.setValue(value);
 		}
@@ -47,7 +52,6 @@ public class DeleteSimpleStringMap {
 		int bucket = Math.abs(key.hashCode()) % N_BUCKETS;
 		HashEntry entry = findEntry(bucketArray[bucket], key);
 		HashEntry previousEntry = getPreviousEntry(bucketArray[bucket], key);
-		System.out.println(previousEntry.getKey());
 		if (entry != null) {
 			if (entry.equals(bucketArray[bucket]) && entry.getLink() == null) {
 				bucketArray[bucket] = null;
@@ -75,6 +79,39 @@ public class DeleteSimpleStringMap {
 	}
 	
 /*
+ * Doubles the number of buckets in the bucketsArray if the ratio of stored
+ * entries versus available buckets exceeds 0.5. It then rehashes each
+ * key from each HashEntry and places the HashEntry into its new bucket from
+ * the resized array.
+ */
+	private HashEntry[] expandBuckets(HashEntry[] bucketArray) {
+		int oldLength = bucketArray.length;
+	    int newLength = 2 * oldLength;
+		HashEntry[] newArray = new HashEntry[newLength];
+		for (int i = 0; i < oldLength; i++) {
+			HashEntry entry = bucketArray[i];
+			while (entry != null) {
+				HashEntry next = entry.getLink();
+				int bucket = rehash(entry, newLength);
+				entry.setLink(newArray[i]);
+				newArray[bucket] = entry;
+				entry = next;
+			}
+		}
+		N_BUCKETS = newLength;
+		return newArray;
+	}
+	
+/*
+ * Rehashes a HashEntry by using its key value and then returns the
+ * rehashed bucket value so that the HashEntry can be placed in the correct bucket
+ * of the resized array.
+ */
+	private int rehash(HashEntry entry, int newLength) {
+		return Math.abs(entry.getKey().hashCode() % newLength);
+	}
+	
+/*
  * Scans the entry chain looking for an entry that matches the specified key.
  * Returns the previous entry in the chain. Returns null if the entry does not exist.
  */
@@ -91,11 +128,11 @@ public class DeleteSimpleStringMap {
 		return null;
 	}
 	
-/* Private constants*/
-	private static final int N_BUCKETS = 1;
 	
 /* Private instance*/
+	private int N_BUCKETS = 7;
 	private HashEntry[] bucketArray;
+	private int itemCount; // Tracks number of items to determine when to expend bucketArray
 
 }
 	
@@ -141,3 +178,4 @@ class HashEntry {
 	private HashEntry entryLink; // Reference to the next entry in the chain
 
 }
+
