@@ -32,42 +32,54 @@ public class Yahtzee extends GraphicsProgram implements YahtzeeConstants {
 	}
 
 	private void playGame() {
-		newTurn();
+		selectedCategories = new boolean[N_CATEGORIES];
+		int turns = N_SCORING_CATEGORIES;
+		while (turns > 0) {
+			newTurn();
+			turns--;
+		}
+		display.printMessage("You win with " + totalScore + " points.");
 	}
 	
 	private void newTurn() {
-		int roll = 3;
 		int[] dice = new int[N_DICE];
-		display.waitForPlayerToClickRoll(1);
-		while (roll > 0) {
-			if (roll == 3) {
-				dice = rollDice();
-				display.displayDice(dice);
-			} else {
-				display.waitForPlayerToSelectDice();
-				for (int i = 0; i < N_DICE; i++) {
-					if (display.isDieSelected(i)) {
-						dice[i] = rgen.nextInt(1, 6);
-					}
+		dice = getFinalDiceRoll(dice);
+		int categorySelection = getCategory(selectedCategories);
+		int score = updateScore(dice, categorySelection);
+		totalScore += score;
+		display.updateScorecard(categorySelection, 1, score);
+		display.updateScorecard(TOTAL, 1, totalScore);
+	}
+	
+	private int updateScore(int[] dice, int categorySelection) {
+		int score = 0;
+		if (categorySelection < 7) {
+			for (int i = 0; i < dice.length; i++) {
+				if (dice[i] == categorySelection) {
+					score += dice[i];
 				}
-				display.displayDice(dice);
 			}
-			roll--;
+			return score;
 		}
-	//	dice = cheatMode();
-	//	sortDice(dice);
-	//	display.displayDice(dice);
-		while (true) {
-			dice = rollDice();
-			sortDice(dice);
-			display.displayDice(dice);
-			System.out.println("");
-			System.out.println("Full House: " + checkFullHouse(dice));
-			System.out.println("Large Straight: " + checkLargeStraight(dice));
-			System.out.println("Small Straight: " + checkSmallStraight(dice));
-			System.out.println("Yahtzee: " + checkYahtzee(dice));
-			waitForClick();
-		}
+		else if (categorySelection == 15) {
+			for (int i = 0; i < dice.length; i++) {
+				score += dice[i];
+				}
+			return score;
+			} 
+		else {
+			switch (categorySelection) {
+				case 9: break;
+				case 10: break;
+				case 11: return checkFullHouse(dice);
+				case 12: break;
+				case 13: break;
+				case 14: break;
+				case 15: break;
+				default: break;
+				}
+			return 10;
+			}
 	}
 	
 	private int[] rollDice() {
@@ -93,6 +105,46 @@ public class Yahtzee extends GraphicsProgram implements YahtzeeConstants {
 			}
 		}
 		return dice;
+	}
+	
+	private int[] getFinalDiceRoll (int[] dice) {
+		int roll = 3;
+		display.printMessage(playerNames[0] + "'s turn! Click the \"Roll Dice\" button to begin.");
+		display.waitForPlayerToClickRoll(1);
+		while (roll > 0) {
+			if (roll == 3) {
+				dice = rollDice();
+				display.displayDice(dice);
+			} else {
+				display.printMessage("Select the dice you wish to re-roll and click \"Roll Again\"");
+				display.waitForPlayerToSelectDice();
+				for (int i = 0; i < N_DICE; i++) {
+					if (display.isDieSelected(i)) {
+						dice[i] = rgen.nextInt(1, 6);
+					}
+				}
+				display.displayDice(dice);
+			}
+			roll--;
+		}
+		dice = cheatMode();
+		sortDice(dice);
+		display.displayDice(dice);
+		return dice;
+	}
+	
+	private int getCategory(boolean[] selectedCategories) {
+		int categorySelection;
+		display.printMessage("Select a category for this roll");
+		while (true) {
+			categorySelection = display.waitForPlayerToSelectCategory();
+			if (selectedCategories[categorySelection]) {
+				display.printMessage("You already picked that category. Please choose another category");
+			}
+			else break;
+		}
+		selectedCategories[categorySelection] = true;
+		return categorySelection;
 	}
 	
 	private int[] cheatMode() {
@@ -135,13 +187,13 @@ public class Yahtzee extends GraphicsProgram implements YahtzeeConstants {
 		return consecutiveCount >= 3;
 	}
 	
-	private boolean checkFullHouse(int[] dice) {
-		if (dice[0] == dice[4]) return false;
+	private int checkFullHouse(int[] dice) {
+		if (dice[0] == dice[4]) return 0;
 		if ((dice[0] == dice[1] && dice[1] == dice[2]) && dice[3] == dice[4] 
 			|| (dice[0] == dice[1]) && dice[2] == dice[3] && dice[3] == dice[4]) {
-				return true;
+				return 25;
 			}
-		else return false;
+		else return 0;
 	}
 	
 	private boolean checkYahtzee(int[] dice) {
@@ -152,7 +204,10 @@ public class Yahtzee extends GraphicsProgram implements YahtzeeConstants {
 /* Private instance variables */
 	private int nPlayers;
 	private String[] playerNames;
+	private boolean[] selectedCategories; // Determines if category was used already for scoring in a game
+	private int totalScore; // Holds overall score for player in a game
 	private YahtzeeDisplay display;
 	private RandomGenerator rgen = new RandomGenerator();
 
 }
+
